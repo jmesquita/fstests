@@ -19,7 +19,6 @@ class TestShowAPI(APIBase):
     @check_connection_decorator
     def show_args(self, args):
         """Test the core show command with one argument"""
-        print args
         e = self.api('show', args)
         assert e.getBody().startswith('-USAGE:')
         return e
@@ -43,6 +42,8 @@ class TestShowAPI(APIBase):
             
     def test_xml_output(self):
         """Test all XML output"""
-        arr = ['codec', 'endpoint', 'application', 'api', 'dialplan', 'file', 'timer', 'calls', 'channels', 'calls', 'detailed_calls', 'bridged_calls', 'detailed_bridged_calls', 'aliases', 'complete', 'chat', 'management', 'modules', 'nat_map', 'say', 'interfaces', 'interface_types', 'tasks', 'limits', 'status']
+        arr = ['codec', 'endpoint', 'application', 'api', 'dialplan', 'file', 'timer', 'calls', 'channels', 'calls', \
+            'detailed_calls', 'bridged_calls', 'detailed_bridged_calls', 'aliases', 'complete', 'chat', 'management',\
+            'modules', 'nat_map', 'say', 'interfaces', 'interface_types', 'tasks', 'limits', 'status']
         for s in arr:
             yield self.show_args_xml,[s, 'as', 'xml']
