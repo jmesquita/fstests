@@ -2,11 +2,19 @@ import string
 import random
 from lxml import etree
 import json
+from unittest import TestCase
 
 from api import APIBase, check_connection_decorator
+from utils import asbool
 from nose.tools import istest
 
-
+class TestAclAPI(APIBase):
+    """Test the acl API command"""        
+    @check_connection_decorator
+    def test_acl_no_args(self):
+        """Test the acl command with no args"""
+        e = self.api('acl')
+        assert (not asbool(e.getBody())), 'Failed to receive false on acl test!'
 
 
 class TestShowAPI(APIBase):
