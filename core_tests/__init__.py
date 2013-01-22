@@ -19,6 +19,7 @@ class TestShowAPI(APIBase):
     @check_connection_decorator
     def show_args(self, args):
         """Test the core show command with one argument"""
+        print args
         e = self.api('show', args)
         assert e.getBody().startswith('-USAGE:')
         return e
@@ -28,14 +29,12 @@ class TestShowAPI(APIBase):
         """Test all show commands as XML and parse it"""
         e = self.api('show', args)
         assert (not e.getBody().startswith('-USAGE:'))
-        etree.fromstring(e.getBody())
-        
-    @check_connection_decorator
-    def test_show_rand_args(self):
-       """Test the core show command with random arguments"""
-       e = self.api('show', ['asdasdasdad', 'asdasdasdasd'])
-       assert e.getBody().startswith('-USAGE:')
-        
+        assert(not e.getBody().startswith('INVALID')), 'FreeSWITCH states this (show %s) is an invalid command!' % (' '.join(args))
+        try:
+            etree.fromstring(e.getBody())
+        except etree.XMLSyntaxError:
+            assert False, 'XML Parser failed on\n%s' % e.getBody()
+            
     def test_random_args(self):
         """Test show comamnd with random args"""
         for i in range(10):
@@ -44,5 +43,6 @@ class TestShowAPI(APIBase):
             
     def test_xml_output(self):
         """Test all XML output"""
-        for s in ['codec', 'endpoint', 'application', 'api', 'dialplan', 'file', 'timer', 'calls', 'channels', 'calls', 'detailed_calls', 'bridged_calls', 'detailed_bridged_calls', 'aliases', 'complete', 'chat', 'management', 'modules', 'nat_map', 'say', 'interfaces', 'interface_types', 'tasks', 'limits', 'status']:
-            yield self.show_args_xml, [s, 'as', 'xml']
+        arr = ['codec', 'endpoint', 'application', 'api', 'dialplan', 'file', 'timer', 'calls', 'channels', 'calls', 'detailed_calls', 'bridged_calls', 'detailed_bridged_calls', 'aliases', 'complete', 'chat', 'management', 'modules', 'nat_map', 'say', 'interfaces', 'interface_types', 'tasks', 'limits', 'status']
+        for s in arr:
+            yield self.show_args_xml,[s, 'as', 'xml']

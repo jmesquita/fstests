@@ -32,5 +32,6 @@ def check_connection_decorator(fn):
     def wrapper(self, *args, **kwargs):
         """Decorator used to check connection"""
         assert self._connection.connected(), 'Connection could not be established to %s:%s!' % (HOST, PORT)
+        return fn(self, *args, **kwargs)
     return wrapper
         
